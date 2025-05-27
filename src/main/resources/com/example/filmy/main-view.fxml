@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.filmy.MainController"
+      style="-fx-padding: 20; -fx-background-color: #ffffff;">
+
+  <Label text="Moja Kolekcja Filmów"
+         style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+  <TableView fx:id="filmTable" prefHeight="300">
+    <columns>
+      <TableColumn text="Tytuł" fx:id="titleColumn" prefWidth="200"/>
+      <TableColumn text="Gatunek" fx:id="genreColumn" prefWidth="120"/>
+      <TableColumn text="Aktorzy" fx:id="actorsColumn" prefWidth="180"/>
+      <TableColumn text="Obejrzany" fx:id="watchedColumn" prefWidth="80"/>
+      <TableColumn text="Ocena" fx:id="ratingColumn" prefWidth="80"/>
+    </columns>
+  </TableView>
+
+  <HBox spacing="10" alignment="CENTER">
+    <Button text="Dodaj Film" onAction="#onAddFilm"/>
+    <Button text="Oceń Film" onAction="#onRateFilm"/>
+    <Button text="Statystyki" onAction="#onShowStats"/>
+  </HBox>
+</VBox>

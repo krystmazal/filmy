@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="20" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.filmy.RegisterController"
+      style="-fx-padding: 30; -fx-background-color: #f8f8f8;">
+
+    <Label text="Rejestracja" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <VBox spacing="10" maxWidth="250">
+        <Label text="Email:"/>
+        <TextField fx:id="emailField"/>
+
+        <Label text="Hasło:"/>
+        <PasswordField fx:id="passwordField"/>
+
+        <Label fx:id="infoLabel"/>
+    </VBox>
+
+    <VBox spacing="10" alignment="CENTER">
+        <Button text="Zarejestruj" onAction="#onRegisterClick" prefWidth="150"/>
+        <Button text="Anuluj" onAction="#onCancelClick" prefWidth="150"/>
+    </VBox>
+</VBox>
