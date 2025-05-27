@@ -16,7 +16,7 @@ public class Film {
         this.rating = 0;
     }
 
-
+//a
     public int getId() { return id; }
     public String getTitle() { return title; }
     public String getGenre() { return genre; }
