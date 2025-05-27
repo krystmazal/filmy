@@ -18,7 +18,20 @@ public class Database {
                     "genre TEXT," +
                     "actors TEXT," +
                     "watched INTEGER DEFAULT 0," +
-                    "rating INTEGER DEFAULT 0);");
+                    "actors_rating INTEGER DEFAULT 0," +
+                    "plot_rating INTEGER DEFAULT 0," +
+                    "scenery_rating INTEGER DEFAULT 0," +
+                    "average_rating REAL DEFAULT 0.0);");
+
+            // Dodaj nowe kolumny jeśli nie istnieją (dla kompatybilności z istniejącą bazą)
+            try {
+                stmt.execute("ALTER TABLE films ADD COLUMN actors_rating INTEGER DEFAULT 0");
+                stmt.execute("ALTER TABLE films ADD COLUMN plot_rating INTEGER DEFAULT 0");
+                stmt.execute("ALTER TABLE films ADD COLUMN scenery_rating INTEGER DEFAULT 0");
+                stmt.execute("ALTER TABLE films ADD COLUMN average_rating REAL DEFAULT 0.0");
+            } catch (SQLException e) {
+                // Kolumny już istnieją - ignoruj błąd
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

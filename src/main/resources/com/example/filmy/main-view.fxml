@@ -10,11 +10,22 @@
   <Label text="Moja Kolekcja Filmów"
          style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
 
+  <!-- Filtry -->
+  <HBox spacing="15" alignment="CENTER_LEFT">
+    <Label text="Filtruj po gatunku:"/>
+    <ComboBox fx:id="genreFilter" prefWidth="120"/>
+
+    <Label text="Min. ocena:"/>
+    <ComboBox fx:id="ratingFilter" prefWidth="80"/>
+
+    <Button text="Wyczyść filtry" onAction="#onClearFilters"/>
+  </HBox>
+
   <TableView fx:id="filmTable" prefHeight="300">
     <columns>
-      <TableColumn text="Tytuł" fx:id="titleColumn" prefWidth="200"/>
-      <TableColumn text="Gatunek" fx:id="genreColumn" prefWidth="120"/>
-      <TableColumn text="Aktorzy" fx:id="actorsColumn" prefWidth="180"/>
+      <TableColumn text="Tytuł" fx:id="titleColumn" prefWidth="180"/>
+      <TableColumn text="Gatunek" fx:id="genreColumn" prefWidth="100"/>
+      <TableColumn text="Aktorzy" fx:id="actorsColumn" prefWidth="150"/>
       <TableColumn text="Obejrzany" fx:id="watchedColumn" prefWidth="80"/>
       <TableColumn text="Ocena" fx:id="ratingColumn" prefWidth="80"/>
     </columns>
@@ -24,5 +35,6 @@
     <Button text="Dodaj Film" onAction="#onAddFilm"/>
     <Button text="Oceń Film" onAction="#onRateFilm"/>
     <Button text="Statystyki" onAction="#onShowStats"/>
+    <Button text="Raport" onAction="#onShowReport"/>
   </HBox>
 </VBox>
