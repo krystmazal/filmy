@@ -151,6 +151,98 @@ public class MainController {
     }
 
     @FXML
+    private void onEditFilm() {
+        Film selected = filmTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Wybierz film do edycji!");
+            return;
+        }
+
+        Dialog<Film> dialog = new Dialog<>();
+        dialog.setTitle("Edytuj film");
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+
+        TextField title = new TextField(selected.getTitle());
+        ComboBox<String> genre = new ComboBox<>();
+        genre.getItems().addAll("Akcja", "Dramat", "Komedia", "Horror", "Sci-Fi", "Romans");
+        genre.setValue(selected.getGenre());
+        TextField actors = new TextField(selected.getActors());
+
+        grid.add(new Label("Tytuł:"), 0, 0);
+        grid.add(title, 1, 0);
+        grid.add(new Label("Gatunek:"), 0, 1);
+        grid.add(genre, 1, 1);
+        grid.add(new Label("Aktorzy:"), 0, 2);
+        grid.add(actors, 1, 2);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.setResultConverter(button -> {
+            if (button == ButtonType.OK && !title.getText().isEmpty()) {
+                Film editedFilm = new Film(title.getText(), genre.getValue(), actors.getText());
+                editedFilm.setId(selected.getId());
+                editedFilm.setWatched(selected.isWatched());
+                editedFilm.setActorsRating(selected.getActorsRating());
+                editedFilm.setPlotRating(selected.getPlotRating());
+                editedFilm.setSceneryRating(selected.getSceneryRating());
+                editedFilm.setAverageRating(selected.getAverageRating());
+                return editedFilm;
+            }
+            return null;
+        });
+
+        Optional<Film> result = dialog.showAndWait();
+        result.ifPresent(editedFilm -> {
+            try (Connection conn = Database.connect()) {
+                PreparedStatement ps = conn.prepareStatement(
+                        "UPDATE films SET title = ?, genre = ?, actors = ? WHERE id = ?");
+                ps.setString(1, editedFilm.getTitle());
+                ps.setString(2, editedFilm.getGenre());
+                ps.setString(3, editedFilm.getActors());
+                ps.setInt(4, editedFilm.getId());
+                ps.executeUpdate();
+
+                int index = allFilms.indexOf(selected);
+                allFilms.set(index, editedFilm);
+                applyFilters();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @FXML
+    private void onDeleteFilm() {
+        Film selected = filmTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Wybierz film do usunięcia!");
+            return;
+        }
+
+        Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmDialog.setTitle("Potwierdź usunięcie");
+        confirmDialog.setContentText("Czy na pewno chcesz usunąć film: " + selected.getTitle() + "?");
+
+        Optional<ButtonType> result = confirmDialog.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try (Connection conn = Database.connect()) {
+                PreparedStatement ps = conn.prepareStatement("DELETE FROM films WHERE id = ?");
+                ps.setInt(1, selected.getId());
+                ps.executeUpdate();
+
+                allFilms.remove(selected);
+                applyFilters();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
     private void onRateFilm() {
         Film selected = filmTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
@@ -237,7 +329,7 @@ public class MainController {
         StringBuilder report = new StringBuilder();
         report.append("=== RAPORT FILMÓW ===\n\n");
 
-        // Najlepsze filmy
+
         report.append("NAJLEPIEJ OCENIONE FILMY:\n");
         allFilms.stream()
                 .filter(f -> f.getAverageRating() > 0)
@@ -245,13 +337,13 @@ public class MainController {
                 .limit(5)
                 .forEach(f -> report.append(String.format("• %s - %.1f/10\n", f.getTitle(), f.getAverageRating())));
 
-        // Statystyki gatunków
+
         report.append("\nSTATYSTYKI GATUNKÓW:\n");
         allFilms.stream()
                 .collect(Collectors.groupingBy(Film::getGenre, Collectors.counting()))
                 .forEach((genre, count) -> report.append(String.format("• %s: %d filmów\n", genre, count)));
 
-        // Średnie oceny aspektów
+
         double avgActors = allFilms.stream().filter(f -> f.getActorsRating() > 0).mapToInt(Film::getActorsRating).average().orElse(0);
         double avgPlot = allFilms.stream().filter(f -> f.getPlotRating() > 0).mapToInt(Film::getPlotRating).average().orElse(0);
         double avgScenery = allFilms.stream().filter(f -> f.getSceneryRating() > 0).mapToInt(Film::getSceneryRating).average().orElse(0);

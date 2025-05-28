@@ -33,7 +33,9 @@
 
   <HBox spacing="10" alignment="CENTER">
     <Button text="Dodaj Film" onAction="#onAddFilm"/>
+    <Button text="Edytuj Film" onAction="#onEditFilm"/>
     <Button text="Oceń Film" onAction="#onRateFilm"/>
+    <Button text="Usuń Film" onAction="#onDeleteFilm"/>
     <Button text="Statystyki" onAction="#onShowStats"/>
     <Button text="Raport" onAction="#onShowReport"/>
   </HBox>

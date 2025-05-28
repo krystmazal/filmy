@@ -28,7 +28,7 @@ public class RegisterController {
 
             infoLabel.setText("Rejestracja udana!");
 
-            // Zamknij okno po 2 sekundach
+
             new Thread(() -> {
                 try {
                     Thread.sleep(2000);
